@@ -6,7 +6,7 @@ import lombok.*;
 @Data //para getter, setter, to string, hascode e equals
 @AllArgsConstructor //construtor com argumentos
 @NoArgsConstructor //construtor sem argumentos
-@Entity
+@Entity(name = "tb_user")
 public class User {
 
     @Id
