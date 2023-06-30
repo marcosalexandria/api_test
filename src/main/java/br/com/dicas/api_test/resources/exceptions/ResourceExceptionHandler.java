@@ -1,5 +1,6 @@
 package br.com.dicas.api_test.resources.exceptions;
 
+import br.com.dicas.api_test.services.exceptions.DataIntegrateViolationException;
 import br.com.dicas.api_test.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -16,5 +17,11 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException ex, HttpServletRequest request){
         StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrateViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrateViolationException(DataIntegrateViolationException ex, HttpServletRequest request){
+        StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
