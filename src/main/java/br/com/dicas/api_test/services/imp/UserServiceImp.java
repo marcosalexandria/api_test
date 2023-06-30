@@ -1,9 +1,11 @@
 package br.com.dicas.api_test.services.imp;
 
 import br.com.dicas.api_test.domain.User;
+import br.com.dicas.api_test.domain.dto.UserDTO;
 import br.com.dicas.api_test.repositories.UserRepository;
 import br.com.dicas.api_test.services.UserService;
 import br.com.dicas.api_test.services.exceptions.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class UserServiceImp implements UserService {
     @Autowired
     UserRepository repository;
 
+    @Autowired
+    ModelMapper mapper;
+
     @Override
     public User findById(Integer id) {
         Optional<User> obj = repository.findById(id);
@@ -23,5 +28,10 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> findAll(){
         return repository.findAll();
+    }
+
+    @Override
+    public User create(UserDTO obj) {
+        return repository.save(mapper.map(obj, User.class));
     }
 }
