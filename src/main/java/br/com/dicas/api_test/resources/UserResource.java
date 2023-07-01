@@ -36,4 +36,10 @@ public class UserResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO obj){
+        obj.setId(id);
+        User user = service.updata(obj);
+        return ResponseEntity.ok().body(mapper.map(user, UserDTO.class));
+    }
 }
