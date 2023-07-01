@@ -21,7 +21,9 @@ public class UserResource {
     @Autowired
     UserService service;
 
-    @GetMapping(value = "/{id}")
+    private static final String ID = "/{id}";
+
+    @GetMapping(value = ID)
     public ResponseEntity<UserDTO> findById(@PathVariable Integer id){
         return ResponseEntity.ok().body(mapper.map(service.findById(id), UserDTO.class));
     }
@@ -33,13 +35,18 @@ public class UserResource {
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO obj){
         User user = service.create(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(user.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path(ID).buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = ID)
     public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO obj){
         obj.setId(id);
         User user = service.updata(obj);
         return ResponseEntity.ok().body(mapper.map(user, UserDTO.class));
+    }
+    @DeleteMapping(value = ID)
+    public ResponseEntity<UserDTO> delete(@PathVariable Integer id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
