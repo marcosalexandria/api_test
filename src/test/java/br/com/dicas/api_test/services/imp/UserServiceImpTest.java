@@ -3,6 +3,7 @@ package br.com.dicas.api_test.services.imp;
 import br.com.dicas.api_test.domain.User;
 import br.com.dicas.api_test.domain.dto.UserDTO;
 import br.com.dicas.api_test.repositories.UserRepository;
+import br.com.dicas.api_test.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,17 @@ class UserServiceImpTest {
         Assertions.assertEquals(ID, response.getId());
         Assertions.assertEquals(NAME, response.getName());
         Assertions.assertEquals(EMAIL, response.getEmail());
+    }
+    @Test
+    void findByIdObjectNotFoundException(){
+        // -- QUANDO O repository.findById FOR CHAMADO COM NUMERO INTEIRO, ENTÃO LANCE ObjectNotFoundException
+        Mockito.when(repository.findById(Mockito.anyInt())).thenThrow(new ObjectNotFoundException("Objeto Não Encontrado!"));
+        try {
+            service.findById(ID);
+        } catch (Exception ex){
+            Assertions.assertEquals(ObjectNotFoundException.class , ex.getClass());
+            Assertions.assertEquals("Objeto Não Encontrado!", ex.getMessage());
+        }
     }
 
     @Test
