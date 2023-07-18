@@ -1,6 +1,5 @@
 package br.com.dicas.api_test;
 
-import br.com.dicas.api_test.domain.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
