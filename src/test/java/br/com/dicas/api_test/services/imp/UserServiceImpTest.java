@@ -3,6 +3,7 @@ package br.com.dicas.api_test.services.imp;
 import br.com.dicas.api_test.domain.User;
 import br.com.dicas.api_test.domain.dto.UserDTO;
 import br.com.dicas.api_test.repositories.UserRepository;
+import br.com.dicas.api_test.services.exceptions.DataIntegrateViolationException;
 import br.com.dicas.api_test.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceImpTest {
@@ -94,6 +93,28 @@ class UserServiceImpTest {
 
     @Test
     void create() {
+        Mockito.when(repository.save(Mockito.any())).thenReturn(user);
+
+        User response = service.create(userDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(User.class, response.getClass());
+        Assertions.assertEquals(ID, response.getId());
+        Assertions.assertEquals(NAME, response.getName());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+    @Test
+    void createDataIntegrateViolationException(){
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            service.create(userDTO);
+        }catch (Exception ex){
+            Assertions.assertEquals(DataIntegrateViolationException.class, ex.getClass());
+            Assertions.assertEquals("Email já cadastrado no sistema!", ex.getMessage());
+        }
     }
 
     @Test
