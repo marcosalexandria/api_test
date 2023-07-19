@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,6 +79,17 @@ class UserServiceImpTest {
 
     @Test
     void findAll() {
+        Mockito.when(repository.findAll()).thenReturn(List.of(user)); //-- MOCANDO
+
+        List<User> response = service.findAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(1, response.size());    //-- NO MOCANDO, FOI PASSADO APENAS UM USER
+        Assertions.assertEquals(User.class, response.get(0).getClass());
+        Assertions.assertEquals(ID, response.get(0).getId());
+        Assertions.assertEquals(NAME, response.get(0).getName());
+        Assertions.assertEquals(EMAIL, response.get(0).getEmail());
+        Assertions.assertEquals(PASSWORD, response.get(0).getPassword());
     }
 
     @Test
