@@ -144,6 +144,25 @@ class UserServiceImpTest {
 
     @Test
     void delete() {
+        Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(optionalUser);
+        // -- NÃO FAÇA NADA QUANDO O repository METODO deleteById FOR CHAMADO
+        Mockito.doNothing().when(repository).deleteById(Mockito.anyInt());
+
+        service.delete(ID);
+
+        // --  VERIFICA SE O deleteById DO repository ESTÁ SENDO CHAMADO SÓ UMA VEZ
+        Mockito.verify(repository, Mockito.times(1)).deleteById(Mockito.anyInt());
+    }
+    @Test
+    void deleteObjectNotFoundException(){
+        Mockito.when(repository.findById(Mockito.anyInt())).thenThrow(new ObjectNotFoundException("Objeto Não Encontrado!"));
+        try{
+            service.delete(ID);
+        }catch (Exception ex){
+            Assertions.assertNotNull(ex);
+            Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
+            Assertions.assertEquals("Objeto Não Encontrado!", ex.getMessage());
+        }
     }
 
     // --- MÉTODO PARA INICIAR ESSAS INSTANCIAS
