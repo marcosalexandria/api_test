@@ -119,6 +119,27 @@ class UserServiceImpTest {
 
     @Test
     void updata() {
+        Mockito.when(repository.save(Mockito.any())).thenReturn(user);
+
+        User response = service.updata(userDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(User.class, response.getClass());
+        Assertions.assertEquals(ID, response.getId());
+        Assertions.assertEquals(NAME, response.getName());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+    @Test
+    void updateDataIntegrateViolationException(){
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenThrow(new DataIntegrateViolationException("Email já cadastrado no sistema!"));
+        try{
+            service.updata(userDTO);
+        }catch (Exception ex){
+            Assertions.assertNotNull(ex);
+            Assertions.assertEquals(DataIntegrateViolationException.class, ex.getClass());
+            Assertions.assertEquals("Email já cadastrado no sistema!", ex.getMessage());
+        }
     }
 
     @Test

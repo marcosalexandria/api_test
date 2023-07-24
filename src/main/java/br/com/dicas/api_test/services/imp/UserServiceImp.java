@@ -39,7 +39,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User updata(UserDTO obj) {
-
+        findByEmail(obj);
         return repository.save(mapper.map(obj, User.class));
     }
 
